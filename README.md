@@ -21,11 +21,9 @@ To run the scripts, you will need to install the following Python libraries:
 - **nltk**: For natural language processing tasks like tokenization, stopword removal, etc.
 - **pandas**: For data manipulation and storage.
 
-
-
-##Usage
-First, run Code-PreProcessing.py to preprocess the text data.
-Next, execute ForwardIndexingCode.py to generate the forward index.
-Then, run InvertedIndexing-Code.py to create the inverted index.
-The Lexicon.json file will be generated automatically, storing the lexicon used in the indexing process.
-Use LexiconCode.py to interact with or manage the lexicon as needed.
+## Usage
+- First, run Code-PreProcessing.py to preprocess the text data.
+- Next, execute ForwardIndexingCode.py to generate the forward index.
+- Then, run InvertedIndexing-Code.py to create the inverted index.
+- The Lexicon.json file will be generated automatically, storing the lexicon used in the indexing process.
+- Use LexiconCode.py to interact with or manage the lexicon as needed.
