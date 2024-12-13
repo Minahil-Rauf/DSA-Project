@@ -1,6 +1,6 @@
 # Search Engine
 
-This project consists of several Python scripts that preprocess text data, perform forward indexing, and generate inverted indexes. It also includes a lexicon for efficient text retrieval.
+This project consists of several Python scripts that preprocess text data, perform forward indexing, and generate inverted indexes. It also includes various JSON files for efficient text retrieval and indexing, as well as a barrels.py script for barrel-related processing.
 
 ## Files Included:
 
@@ -10,9 +10,17 @@ This project consists of several Python scripts that preprocess text data, perfo
 
 - **InvertedIndexing-Code.py**: Creates an inverted index, which maps terms to the documents in which they appear.
 
-- **Lexicon.json**: Contains a lexicon with terms and their corresponding document occurrences, used in the indexing process.
-
+- **files.json**: Contains all JSON files, including:
+  - **lexicon.json**: Lexicon with terms and their corresponding document occurrences.
+  - **forward_index.json**: Forward index data.
+  - **backward_index.json**: Inverted index data.
+  - **barrels.json**: Barrel-related data for efficient text retrieval.
+  - **dataset.json**: The dataset used for indexing.
+  - **preprocessing.json**: Data resulting from the preprocessing steps.
+  
 - **LexiconCode.py**: Handles the creation and management of the lexicon file used for indexing and retrieval.
+
+- **barrels.py**: Contains code for barrel-related processing and management of barrel data.
 
 ## Installation
 
@@ -22,8 +30,12 @@ To run the scripts, you will need to install the following Python libraries:
 - **pandas**: For data manipulation and storage.
 
 ## Usage
-- First, run Code-PreProcessing.py to preprocess the text data.
-- Next, execute ForwardIndexingCode.py to generate the forward index.
-- Then, run InvertedIndexing-Code.py to create the inverted index.
-- The Lexicon.json file will be generated automatically, storing the lexicon used in the indexing process.
-- Use LexiconCode.py to interact with or manage the lexicon as needed.
+- First, run **Code-PreProcessing.py** to preprocess the text data.
+- Next, execute **ForwardIndexingCode.py** to generate the forward index.
+- Then, run **InvertedIndexing-Code.py** to create the inverted index.
+- The **files.json** file will be generated automatically, storing all the JSON data used in the indexing process.
+- Use **LexiconCode.py** to interact with or manage the lexicon as needed.
+- Use **barrels.py** for barrel-related processing.
+
+You can access and download the **files.json** file, which includes all the JSON files, from the following link:  
+[files.json File](https://drive.google.com/file/d/1ACgAzOM7V0xy5ACSZgNt2MQSHh9W6-DR/view?usp=drive_link)
