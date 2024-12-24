@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Query - NewsLinker</title>
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #34d399, #9b5de5); /* Green to Purple Gradient */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .search-container {
+            background: rgba(255, 255, 255, 0.1); /* Glass effect with transparency */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(10px); /* Blurring the background */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+            color: white;
+            transition: background 0.3s ease;
+        }
+
+        .search-container input::placeholder {
+            color: #ccc;
+        }
+
+        .search-container input:focus {
+            background: rgba(255, 255, 255, 0.3); /* Lighten background on focus */
+        }
+
+        .search-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #9b5de5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .search-container button:hover {
+            background-color: #7b3fe4;
+        }
+
+        .search-container button:active {
+            transform: scale(0.98); /* Slight shrink on click */
+            background-color: #6a29b8;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                padding: 20px;
+            }
+
+            .search-container input,
+            .search-container button {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>NewsLinker</h1>
+    
+    <form method="POST" action="/search">
+        <label for="query">Enter your query:</label>
+        <input type="text" id="query" name="query" required placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Voice Search Button -->
+    <button id="voiceSearchButton">🎤 Start Voice Search</button>
+
+    <!-- JavaScript to handle voice input -->
+    <script>
+        const voiceSearchButton = document.getElementById('voiceSearchButton');
+        const queryInput = document.getElementById('query');
+
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        voiceSearchButton.addEventListener('click', () => {
+            recognition.start();
+            voiceSearchButton.disabled = true;
+            voiceSearchButton.innerHTML = "Listening...";
+        });
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            queryInput.value = transcript; // Set the voice input into the query field
+            voiceSearchButton.disabled = false;
+            voiceSearchButton.innerHTML = "🎤 Start Voice Search";
+            document.querySelector('form').submit(); // Submit the form after capturing the voice input
+        };
+
+        recognition.onerror = (event) => {
+            voiceSearchButton.disabled = false;
+            voiceSearchButton.innerHTML = "🎤 Start Voice Search";
+            console.error("Voice recognition error: ", event.error);
+        };
+    </script>
+</body>
+</html>
