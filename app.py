@@ -19,16 +19,65 @@ def search_in_barrels(query):
     results = []
     if len(query) > 3:
         barrel_file = os.path.join(barrels_dir, f"{query[0]}.json")
+    if os.path.exists(barrel_file):
+        with open(barrel_file, 'r') as f:
+            data = json.load(f)
+            
+            # Navigate through the data structure
+            if query[0] in data and query[1] in data[query[0]] and query[2] in data[query[0]][query[1]]:
+                results = data[query[0]][query[1]][query[2]]
+
+                # Extract exact matches
+                exact_results = []
+                if isinstance(results, list):  # If results is a list
+                    for item in results:
+                        if isinstance(item, list) and len(item) > 0 and item[0] == query:
+                            exact_results.append(item)
+                results = exact_results  # Update results to contain only exact matches
+                    
+    # Case 1: Query is 1 letter (search entire barrel)
+    elif len(query) == 1:
+        barrel_file = os.path.join(barrels_dir, f"{query[0]}.json")
+
+        # If the barrel file exists, search through it
         if os.path.exists(barrel_file):
             with open(barrel_file, 'r') as f:
                 data = json.load(f)
-                if len(query) >= 2 and query[1] in data.get(query[0], {}):
-                    if len(query) >= 3 and query[2] in data[query[0]].get(query[1], {}):
-                        results = data[query[0]][query[1]][query[2]]
-                    elif len(query) == 2:
-                        results = data[query[0]].get(query[1], [])
-                else:
-                    results = data.get(query[0], [])
+
+                # Check if the first letter exists in the barrel
+                if query[0] in data:
+                    for second_level_key in data[query[0]].values():
+                        for third_level_key in second_level_key.values():
+                            results.extend(third_level_key)  # Add all words from all sub-bins
+
+    # Case 2: Query is 2 letters (search second-level bins)
+    elif len(query) == 2:
+        barrel_file = os.path.join(barrels_dir, f"{query[0]}.json")
+
+        # If the barrel file exists, search through it
+        if os.path.exists(barrel_file):
+            with open(barrel_file, 'r') as f:
+                data = json.load(f)
+
+                # Check if the first letter exists in the barrel and the second level exists
+                if query[0] in data and query[1] in data.get(query[0], {}):
+                    for second_level_key, second_level_value in data[query[0]][query[1]].items():
+                        results.extend(second_level_value)  # Add results from each bin inside
+
+    # Case 3: Query is 3 letters (search third-level bins)
+    elif len(query) == 3:
+        barrel_file = os.path.join(barrels_dir, f"{query[0]}.json")
+
+        # If the barrel file exists, search through it
+        if os.path.exists(barrel_file):
+            with open(barrel_file, 'r') as f:
+                data = json.load(f)
+
+                # Check if the query exists in the third-level bins
+                if query[0] in data and query[1] in data[query[0]] and query[2] in data[query[0]][query[1]]:
+                    results = data[query[0]][query[1]][query[2]]
+                
+                    
     return results
 
 def convert_to_comma_separated_urls(data):
