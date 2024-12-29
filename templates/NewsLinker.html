@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsLinker Results</title>
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Google Font for sleek typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    /* Global Styles */
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(to right, #74ebd5, #9face6);
+        color: #333;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;  /* Center content vertically */
+        flex-direction: column;
+    }
+
+    /* Main Container */
+    .container {
+        width: 100%;
+        max-width: 800px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px 20px;
+        text-align: center;
+        overflow-y: auto;
+        max-height: 80vh;
+    }
+
+    /* Header Styling */
+    header {
+        margin-bottom: 30px;
+    }
+
+    header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    header p {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+        margin-top: 10px;
+    }
+
+    /* Results Styling */
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px;
+        max-height: 60vh;
+        overflow-y: auto; /* Allow scroll if results are long */
+    }
+
+    li {
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    a {
+        text-decoration: none;
+        font-size: 1.1rem;
+        color: #3498db;
+        transition: color 0.3s ease, text-decoration 0.3s ease;
+    }
+
+    a:hover {
+        color: #2980b9;
+        text-decoration: underline;
+    }
+
+    /* Separator line between results */
+    hr {
+        border: 0;
+        height: 1px;
+        background-color: #ddd;
+        margin-top: 15px;
+    }
+
+    /* Footer Styles */
+    footer {
+        margin-top: 30px;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        text-align: center;
+    }
+
+    footer i {
+        margin-left: 5px;
+    }
+
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>Search Results</h1>
+            <p>Your results for the query are below</p>
+        </header>
+
+        <main>
+            <ul>
+                {% if search_duration %}
+                <div class="search-time">
+                    Search completed in {{ search_duration }} seconds.
+                </div>
+            {% endif %}
+                {% for result in results %}
+                    <li>
+                        <a href="{{ result['url'] }}" target="_blank">{{ result['title'] }}</a><br>
+                        <hr>
+                    </li>
+                {% else %}
+                    <li>No results found</li>
+                {% endfor %}
+            </ul>
+        </main>
+
+        <footer>
+            <p>Powered by NewsLinker | <i class="fas fa-globe"></i> Connecting the world</p>
+        </footer>
+    </div>
+</body>
+</html>

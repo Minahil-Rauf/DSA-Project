@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Page</title>
+    <style>
+        /* Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Container for the error message */
+        .error-container {
+            background-color: #ffebf2;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* Styling the main heading */
+        h1 {
+            color: #ff66b2;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        /* Styling the error message text */
+        p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Styling the link */
+        a {
+            font-size: 1.1rem;
+            text-decoration: none;
+            color: #fff;
+            background-color: #ff66b2;
+            padding: 12px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #ff3385;
+            transform: translateY(-2px);
+        }
+
+        /* Add some animations */
+        .error-container {
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Oops! Something Went Wrong</h1>
+        <p>{{ error_message }}</p>
+        <a href="/">Go Back to Home</a>
+    </div>
+</body>
+</html>

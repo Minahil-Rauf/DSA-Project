@@ -6,7 +6,16 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import time
+import re
+import nltk
+from flask import request, render_template
+import time
+from nltk.stem import WordNetLemmatizer
 
+# Download WordNet data for lemmatization (if not already downloaded)
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
 # Download necessary nltk resources
 nltk.download('punkt')
 
@@ -14,6 +23,13 @@ nltk.download('punkt')
 barrels_dir = 'barrels'
 
 app = Flask(__name__)
+# Download WordNet data for lemmatization (if not already downloaded)
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+
+
+STOPWORDS = {'an', 'and', 'is', 'to', 'or', 'the', 'a', 'in', 'of', 'for', 'on', 'at', 'with', 'as'}
 
 def search_in_barrels(query):
     results = []
@@ -152,35 +168,68 @@ def save_urls_to_json(urls, filename, query_words):
 @app.route('/')
 def index():
     return render_template('index.html')
-
 @app.route('/search', methods=['POST'])
+
+
+# List of common stopwords to ignore
+
+
+
+
+
+
+
+
+# List of common stopwords to ignore
+
+
+
 def search():
     query = request.form.get('query')
     if not query:
-        return "No search query provided"
+        return render_template('errorpages.html', error_message="No search query provided.")
     
+    # Start time for performance tracking
     start_time = time.time()
-
+    
+    # Tokenize the query and convert to lowercase
     words = nltk.word_tokenize(query)
     words = [word.lower() for word in words]
     
+    # Filter out stopwords
+    filtered_words = [word for word in words if word not in STOPWORDS]
+    
+    if not filtered_words:
+        return render_template('errorpages.html', error_message="No valid query terms after filtering stopwords.")
+    
+    # Perform search with the filtered query words
     results = []
-    for word in words:
+    for word in filtered_words:
         results.extend(search_in_barrels(word))
-
+    
     if not results:
-        return "No results found"
-    else:
-        urls = convert_to_comma_separated_urls(results)
-        filename = 'results.json'
-        sorted_data = save_urls_to_json(urls, filename, words)
-        
-        end_time = time.time()
-        search_duration = end_time - start_time
-        
-        print(f"Search completed in {search_duration:.2f} seconds.")
+        return render_template('errorpages.html', error_message="No results found for the provided query.")
+    
+    # Convert results to URLs
+    urls = convert_to_comma_separated_urls(results)
+    filename = 'results.json'
+    sorted_data = save_urls_to_json(urls, filename, filtered_words)
+    
+    # End time for performance tracking
+    end_time = time.time()
+    search_duration = end_time - start_time
+    
+    print(f"Search completed in {search_duration:.2f} seconds.")
+    
+    # Render the results page
+    return render_template('NewsLinker.html', results=sorted_data, search_duration=search_duration)
 
-        return render_template('NewsLinker.html', results=sorted_data, search_duration=search_duration)
+@app.errorhandler(Exception)
+def handle_error(e):
+    # Log the error if needed (e.g., to a file or monitoring service)
+    print(f"Error: {str(e)}")
+    return render_template('errorpages.html', error_message="An unexpected error occurred. Please try again.")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
