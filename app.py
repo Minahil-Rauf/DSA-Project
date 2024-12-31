@@ -169,34 +169,25 @@ def save_urls_to_json(urls, filename, query_words):
 def index():
     return render_template('index.html')
 @app.route('/search', methods=['POST'])
-
-
-# List of common stopwords to ignore
-
-
-
-
-
-
-
-
-# List of common stopwords to ignore
-
-
-
+@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['POST'])
 def search():
     query = request.form.get('query')
+    
+    # Handle empty or invalid query
     if not query:
         return render_template('errorpages.html', error_message="No search query provided.")
     
     # Start time for performance tracking
-    start_time = time.time()
+    start_time = time.time()  # Define start_time here
     
-    # Tokenize the query and convert to lowercase
+    # Preprocess the query
+    query = query.strip().lower()  # Convert to lowercase and remove extra spaces
+    if query.endswith('.'):       # Remove period at the end, if present
+        query = query[:-1]
+    
+    # Tokenize and filter out stopwords
     words = nltk.word_tokenize(query)
-    words = [word.lower() for word in words]
-    
-    # Filter out stopwords
     filtered_words = [word for word in words if word not in STOPWORDS]
     
     if not filtered_words:
@@ -207,6 +198,7 @@ def search():
     for word in filtered_words:
         results.extend(search_in_barrels(word))
     
+    # If no results are found
     if not results:
         return render_template('errorpages.html', error_message="No results found for the provided query.")
     
@@ -216,12 +208,11 @@ def search():
     sorted_data = save_urls_to_json(urls, filename, filtered_words)
     
     # End time for performance tracking
-    end_time = time.time()
-    search_duration = end_time - start_time
+    search_duration = time.time() - start_time  # Calculate duration
     
     print(f"Search completed in {search_duration:.2f} seconds.")
     
-    # Render the results page
+    # Render the results page with search duration and results
     return render_template('NewsLinker.html', results=sorted_data, search_duration=search_duration)
 
 @app.errorhandler(Exception)

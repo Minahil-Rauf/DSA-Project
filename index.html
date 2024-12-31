@@ -26,7 +26,7 @@
         h1 {
             text-align: center;
             font-size: 2.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             font-weight: bold;
         }
 
@@ -40,6 +40,13 @@
             backdrop-filter: blur(10px); /* Blurring the background */
             border: 1px solid rgba(255, 255, 255, 0.3);
             text-align: center;
+        }
+
+        .search-container label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #fff;
         }
 
         .search-container input {
@@ -73,6 +80,7 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-bottom: 15px;
         }
 
         .search-container button:hover {
@@ -82,6 +90,66 @@
         .search-container button:active {
             transform: scale(0.98); /* Slight shrink on click */
             background-color: #6a29b8;
+        }
+
+        /* Voice Search Button */
+        #voiceSearchButton {
+            width: 100%;
+            padding: 12px;
+            background-color: #34d399;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        #voiceSearchButton:hover {
+            background-color: #2b8d6e;
+        }
+
+        #voiceSearchButton:active {
+            transform: scale(0.98);
+            background-color: #248e62;
+        }
+
+        /* Pop-up Modal Styling */
+        #popupModal {
+            display: none;
+            position: fixed;
+            top: 10px; /* Position the pop-up at the top */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            font-size: 1.2rem;
+        }
+
+        #popupModal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        #popupModal button {
+            background-color: #9b5de5;
+            padding: 10px;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #popupModal button:hover {
+            background-color: #7b3fe4;
         }
 
         /* Responsive design */
@@ -98,30 +166,53 @@
             .search-container button {
                 font-size: 1rem;
             }
+
+            #voiceSearchButton {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>NewsLinker</h1>
-    
-    <form method="POST" action="/search">
-        <label for="query">Enter your query:</label>
-        <input type="text" id="query" name="query" required placeholder="Search...">
-        <button type="submit">Search</button>
-    </form>
+  
+    <div class="search-container">
+        <h1>NewsLinker</h1>
+        <form method="POST" action="/search" onsubmit="showPopup(event)">
+            <label for="query">Enter your query:</label>
+            <input type="text" id="query" name="query" required placeholder="Search...">
+            <button type="submit">Search</button>
+        </form>
 
-    <!-- Voice Search Button -->
-    <button id="voiceSearchButton">🎤 Start Voice Search</button>
+        <!-- Voice Search Button -->
+        <button id="voiceSearchButton">🎤 Start Voice Search</button>
+    </div>
 
-    <!-- JavaScript to handle voice input -->
+    <!-- Funny News Pop-up Modal -->
+    <div id="popupModal">
+        <h2>BREAKING NEWS!</h2>
+        <p id="jokeText">Did you know? Penguins propose to their mates with a pebble! 🐧💍</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <!-- JavaScript to handle voice input and pop-up -->
     <script>
         const voiceSearchButton = document.getElementById('voiceSearchButton');
         const queryInput = document.getElementById('query');
+        const jokeText = document.getElementById('jokeText');
 
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'en-US';
         recognition.continuous = false;
         recognition.interimResults = false;
+
+        const jokes = [
+            "Did you know? Penguins propose to their mates with a pebble! 🐧💍",
+            "Why don’t skeletons fight each other? They don’t have the guts! 💀",
+            "Why don’t eggs tell jokes? They’d crack each other up! 🥚",
+            "What do you call fake spaghetti? An impasta! 🍝",
+            "Why was the math book sad? It had too many problems! 📚",
+            "Why did the scarecrow win an award? Because he was outstanding in his field! 🌾"
+        ];
 
         voiceSearchButton.addEventListener('click', () => {
             recognition.start();
@@ -142,6 +233,23 @@
             voiceSearchButton.innerHTML = "🎤 Start Voice Search";
             console.error("Voice recognition error: ", event.error);
         };
+
+        // Show the pop-up when the form is submitted (search button clicked)
+        function showPopup(event) {
+            event.preventDefault(); // Prevent form submission from waiting for the pop-up
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)]; // Pick a random joke
+            jokeText.innerHTML = randomJoke;
+            document.getElementById('popupModal').style.display = 'block';
+            // Continue with form submission after showing the popup
+            setTimeout(() => {
+                document.querySelector('form').submit();
+            }, 500); // Submit after a short delay, ensuring the pop-up is displayed
+        }
+
+        // Close the pop-up
+        function closePopup() {
+            document.getElementById('popupModal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
