@@ -1,4 +1,4 @@
-# Search Engine
+# NewsLinker-Search Engine
 
 This project consists of several Python scripts that preprocess text data, perform forward indexing, and generate inverted indexes. It also includes various JSON files for efficient text retrieval and indexing, as well as a barrels.py script for barrel-related processing.
 
